@@ -16,20 +16,22 @@ $input = get_json_input();
 $topic = trim($input['topic'] ?? '');
 $count = isset($input['count']) ? (int)$input['count'] : 7;
 $tone = trim($input['tone'] ?? 'Educational');
+$apiKey = trim($input['apiKey'] ?? '');
+$apiProvider = trim($input['apiProvider'] ?? '');
 
 if (empty($topic)) {
-    $topic = 'Python Data Types';
+    $topic = 'Healthy Morning Habits';
 }
 if ($count < 3 || $count > 10) {
     $count = 7;
 }
 
 try {
-    $result = AIService::generate($topic, $count, $tone);
+    $result = AIService::generate($topic, $count, $tone, $apiKey, $apiProvider);
     json_response($result);
 } catch (Exception $e) {
     error_log("AI Generate Endpoint Error: " . $e->getMessage());
-    // Fall back gracefully to offline content bank
+    // Fall back gracefully to topic-aware content generator
     $fallback = AIService::generateFallback($topic, $count, $tone);
     json_response([
         'ok' => true,

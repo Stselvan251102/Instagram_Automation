@@ -109,7 +109,7 @@ interface StudioState {
   generating: boolean;
   genLog: string[];
   apiKey: string;
-  apiProvider: "openai" | "anthropic";
+  apiProvider: "openai" | "groq" | "gemini" | "anthropic" | "openrouter";
 
   brand: () => BrandKit;
   setBrand: (patch: Partial<BrandKit>) => void;
@@ -140,7 +140,7 @@ interface StudioState {
   setZoom: (z: number | "fit") => void;
   toggleGuides: () => void;
   setApiKey: (k: string) => void;
-  setApiProvider: (p: "openai" | "anthropic") => void;
+  setApiProvider: (p: "openai" | "groq" | "gemini" | "anthropic" | "openrouter") => void;
   pushLog: (l: string) => void;
   setGenerating: (g: boolean) => void;
   autoFix: () => void;
@@ -158,6 +158,8 @@ interface StudioState {
 const initialBrands = load<BrandKit[]>(BRAND_KEY, [DEFAULT_BRAND]);
 const savedBundle = load<{ project: CarouselProject; brandKits: BrandKit[]; activeBrandKitId: string; savedAt: number } | null>(SAVED_KEY, null);
 const initialProject = load<CarouselProject | null>(PROJECT_KEY, null) ?? savedBundle?.project ?? null;
+const initialApiKey = load<string>("carouselfy.apiKey", "");
+const initialApiProvider = load<"openai" | "groq" | "gemini" | "anthropic" | "openrouter">("carouselfy.apiProvider", "openai");
 
 export const useStudio = create<StudioState>((set, get) => {
   let lastSnap = 0;
@@ -206,8 +208,8 @@ export const useStudio = create<StudioState>((set, get) => {
     showGuides: true,
     generating: false,
     genLog: [],
-    apiKey: "",
-    apiProvider: "openai",
+    apiKey: initialApiKey,
+    apiProvider: initialApiProvider,
     past: [],
     future: [],
     saveStatus: savedBundle ? "saved" : "unsaved",
@@ -430,8 +432,14 @@ export const useStudio = create<StudioState>((set, get) => {
 
     setZoom: (z) => set({ zoom: z }),
     toggleGuides: () => set({ showGuides: !get().showGuides }),
-    setApiKey: (k) => set({ apiKey: k }),
-    setApiProvider: (p) => set({ apiProvider: p }),
+    setApiKey: (k) => {
+      set({ apiKey: k });
+      save("carouselfy.apiKey", k);
+    },
+    setApiProvider: (p) => {
+      set({ apiProvider: p });
+      save("carouselfy.apiProvider", p);
+    },
     pushLog: (l) => set({ genLog: [...get().genLog, l] }),
     setGenerating: (g) => set({ generating: g, genLog: g ? [] : get().genLog }),
     autoFix: () => {

@@ -31,6 +31,9 @@ $sqlFile = dirname(__DIR__) . '/database.sql';
 if (!file_exists($sqlFile)) {
     $sqlFile = dirname(__DIR__, 2) . '/database.sql';
 }
+if (!file_exists($sqlFile)) {
+    $sqlFile = __DIR__ . '/../../database.sql';
+}
 
 if (!file_exists($sqlFile)) {
     json_response(['ok' => false, 'error' => 'database.sql schema file not found.'], 404);
@@ -38,13 +41,18 @@ if (!file_exists($sqlFile)) {
 
 $sqlContent = file_get_contents($sqlFile);
 
-// Filter and execute only CREATE TABLE statements safely
-$statements = array_filter(
-    array_map('trim', explode(';', $sqlContent)),
-    function($stmt) {
-        return !empty($stmt) && preg_match('/^\s*(CREATE TABLE|SET)/i', $stmt);
+// Strip SQL comments cleanly before statement parsing
+$sqlClean = preg_replace('/--.*$/m', '', $sqlContent);
+$sqlClean = preg_replace('/\/\*.*?\*\//s', '', $sqlClean);
+
+$rawStatements = explode(';', $sqlClean);
+$statements = [];
+foreach ($rawStatements as $stmt) {
+    $stmt = trim($stmt);
+    if (!empty($stmt) && preg_match('/^\s*(CREATE TABLE|SET)/i', $stmt)) {
+        $statements[] = $stmt;
     }
-);
+}
 
 $executed = [];
 $errors = [];
@@ -63,6 +71,6 @@ foreach ($statements as $stmt) {
 json_response([
     'ok' => empty($errors),
     'database' => DB_NAME,
-    'tables_created_or_verified' => array_unique($executed),
+    'tables_created_or_verified' => array_values(array_unique($executed)),
     'errors' => $errors
 ]);

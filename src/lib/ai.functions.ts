@@ -2,6 +2,8 @@ export interface GenerateInput {
   topic: string;
   count: number;
   tone: string;
+  apiKey?: string | undefined;
+  apiProvider?: string | undefined;
 }
 
 export async function generateCarousel({ data }: { data: GenerateInput }) {
@@ -16,6 +18,8 @@ export async function generateCarousel({ data }: { data: GenerateInput }) {
         topic: data.topic,
         count: data.count,
         tone: data.tone,
+        apiKey: data.apiKey || undefined,
+        apiProvider: data.apiProvider || undefined,
       }),
     });
 

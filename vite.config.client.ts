@@ -19,6 +19,7 @@ export default defineConfig({
     outDir: "public_html",
     emptyOutDir: false,
     rollupOptions: {
+      input: path.resolve(__dirname, "src/main.tsx"),
       output: {
         entryFileNames: "assets/js/studio.js",
         chunkFileNames: "assets/js/[name]-[hash].js",

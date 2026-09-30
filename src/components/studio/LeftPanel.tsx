@@ -96,17 +96,29 @@ export function LeftPanel() {
       if (i < steps.length) pushLog(steps[i++]!);
     }, 1600);
     try {
-      const res = await generateCarousel({ data: { topic: topic.trim() || "Your Topic", count, tone } });
+      const res = await generateCarousel({
+        data: {
+          topic: topic.trim() || "Your Topic",
+          count,
+          tone,
+          apiKey: apiKey ? apiKey.trim() : undefined,
+          apiProvider: apiKey ? apiProvider : undefined,
+        },
+      });
       if (res.ok) {
         generate(topic, count, tone, { slides: res.slides, category: res.category, title: res.title });
-        toast.success(`Generated ${res.slides.length} slides for "${topic}"`);
+        if (res.source === "ai") {
+          toast.success(`Generated ${res.slides.length} slides with AI (${res.provider || 'LLM'}) for "${topic}"`);
+        } else {
+          toast.info(`Generated ${res.slides.length} slides for "${topic}". ${res.notice || ""}`);
+        }
       } else {
         generate(topic, count, tone);
-        toast.warning(`${res.error} Showing built-in sample content instead.`);
+        toast.warning(`${res.error || "AI unavailable."} Showing topic content instead.`);
       }
     } catch {
       generate(topic, count, tone);
-      toast.warning("Couldn't reach AI — showing built-in sample content instead.");
+      toast.warning("Couldn't reach AI — showing topic content instead.");
     } finally {
       clearInterval(ticker);
       setGenerating(false);
@@ -177,23 +189,34 @@ export function LeftPanel() {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Bring your own key</DialogTitle>
+                <DialogTitle>Bring your own AI Key</DialogTitle>
                 <DialogDescription>
-                  Stored in this browser only. Without a key the studio uses realistic mock generation.
+                  Stored locally in your browser. Also configurable server-wide in Hostinger Settings.
                 </DialogDescription>
               </DialogHeader>
-              <Select value={apiProvider} onValueChange={(v) => setApiProvider(v as "openai" | "anthropic")}>
+              <Select value={apiProvider} onValueChange={(v) => setApiProvider(v as any)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="openai">OpenAI</SelectItem>
-                  <SelectItem value="anthropic">Anthropic</SelectItem>
+                  <SelectItem value="openai">OpenAI (gpt-4o-mini)</SelectItem>
+                  <SelectItem value="groq">Groq (Llama 3.3 70B — Free & Fast)</SelectItem>
+                  <SelectItem value="gemini">Google Gemini (Gemini 1.5 Flash — Free)</SelectItem>
+                  <SelectItem value="anthropic">Anthropic (Claude 3.5 Haiku)</SelectItem>
+                  <SelectItem value="openrouter">OpenRouter</SelectItem>
                 </SelectContent>
               </Select>
               <Input
                 type="password"
-                placeholder="sk-…"
+                placeholder={
+                  apiProvider === "groq"
+                    ? "gsk_..."
+                    : apiProvider === "gemini"
+                    ? "AIzaSy..."
+                    : apiProvider === "anthropic"
+                    ? "sk-ant-..."
+                    : "sk-proj-..."
+                }
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
               />
@@ -201,10 +224,14 @@ export function LeftPanel() {
                 <Button
                   onClick={() => {
                     setKeyOpen(false);
-                    toast.success(apiKey ? "Key saved for this session" : "Using mock generation");
+                    toast.success(
+                      apiKey
+                        ? `Saved ${apiProvider.toUpperCase()} key in browser storage`
+                        : "No key entered — using built-in topic engine"
+                    );
                   }}
                 >
-                  Save
+                  Save Key
                 </Button>
               </DialogFooter>
             </DialogContent>

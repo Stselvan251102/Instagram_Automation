@@ -1,0 +1,26 @@
+# Secure Uploads Directory
+# Disallow execution of all scripts
+
+Options -Indexes -ExecCGI
+
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+# Block execution of any PHP or executable script
+<FilesMatch "(?i)\.(php|phtml|php3|php4|php5|php7|php8|phar|pl|py|cgi|sh|bash)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Only allow safe image file types
+<FilesMatch "(?i)\.(jpg|jpeg|png|gif|webp|svg|ico)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>

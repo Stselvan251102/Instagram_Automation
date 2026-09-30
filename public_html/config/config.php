@@ -85,9 +85,15 @@ define('DB_USER', env('DB_USERNAME', env('DB_USER', 'u561630513_insta_auto')));
 define('DB_PASSWORD', env('DB_PASSWORD', ''));
 
 // AI API Keys (Stored server-side only)
-define('OPENAI_API_KEY', env('OPENAI_API_KEY', ''));
+$rawOpenAIKey = env('OPENAI_API_KEY', '');
+$rawGroqKey = env('GROQ_API_KEY', '');
+if (empty($rawGroqKey) && str_starts_with($rawOpenAIKey, 'gsk_')) {
+    $rawGroqKey = $rawOpenAIKey;
+    $rawOpenAIKey = '';
+}
+define('OPENAI_API_KEY', $rawOpenAIKey);
 define('OPENAI_MODEL', env('OPENAI_MODEL', 'gpt-4o-mini'));
-define('GROQ_API_KEY', env('GROQ_API_KEY', ''));
+define('GROQ_API_KEY', $rawGroqKey);
 define('GROQ_MODEL', env('GROQ_MODEL', 'llama-3.3-70b-versatile'));
 define('GEMINI_API_KEY', env('GEMINI_API_KEY', ''));
 define('GEMINI_MODEL', env('GEMINI_MODEL', 'gemini-1.5-flash'));

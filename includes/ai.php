@@ -85,6 +85,7 @@ class AIService {
         string $tone,
         ?string $customKey = null,
         ?string $customProvider = null
+    ): array {
         $apiKey = $customKey;
         $providerName = $customProvider;
 

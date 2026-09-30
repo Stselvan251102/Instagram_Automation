@@ -85,24 +85,8 @@ class AIService {
         string $tone,
         ?string $customKey = null,
         ?string $customProvider = null
-    ): array {
         $apiKey = $customKey;
         $providerName = $customProvider;
-
-        // Auto-detect provider if not explicitly given
-        if (!empty($apiKey) && empty($providerName)) {
-            if (str_starts_with($apiKey, 'gsk_')) {
-                $providerName = 'groq';
-            } elseif (str_starts_with($apiKey, 'AIzaSy')) {
-                $providerName = 'gemini';
-            } elseif (str_starts_with($apiKey, 'sk-ant-')) {
-                $providerName = 'anthropic';
-            } elseif (str_starts_with($apiKey, 'sk-or-')) {
-                $providerName = 'openrouter';
-            } else {
-                $providerName = 'openai';
-            }
-        }
 
         // Fall back to server environment variables if no client key provided
         if (empty($apiKey)) {
@@ -114,7 +98,6 @@ class AIService {
                 $providerName = 'gemini';
             } elseif (!empty(OPENAI_API_KEY)) {
                 $apiKey = OPENAI_API_KEY;
-                $providerName = 'openai';
             } elseif (!empty(OPENROUTER_API_KEY)) {
                 $apiKey = OPENROUTER_API_KEY;
                 $providerName = 'openrouter';
@@ -124,6 +107,19 @@ class AIService {
             } else {
                 throw new Exception("No AI API key configured.");
             }
+        }
+
+        // Auto-detect or override provider by key format (essential if user put Groq/Gemini key in OPENAI_API_KEY)
+        if (str_starts_with($apiKey, 'gsk_')) {
+            $providerName = 'groq';
+        } elseif (str_starts_with($apiKey, 'AIzaSy')) {
+            $providerName = 'gemini';
+        } elseif (str_starts_with($apiKey, 'sk-ant-')) {
+            $providerName = 'anthropic';
+        } elseif (str_starts_with($apiKey, 'sk-or-')) {
+            $providerName = 'openrouter';
+        } elseif (empty($providerName)) {
+            $providerName = 'openai';
         }
 
         $domain = self::detectDomain($topic);

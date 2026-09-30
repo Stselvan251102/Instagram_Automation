@@ -18,7 +18,7 @@ require_once (file_exists(__DIR__ . '/../includes/instagram.php') ? __DIR__ . '/
 $isCli = (php_sapi_name() === 'cli');
 
 if (!$isCli) {
-    $secret = trim($_GET['secret'] ?? '');
+    $secret = trim($_GET['secret'] ?? $_GET['token'] ?? '');
     if (empty(CRON_SECRET) || !hash_equals(CRON_SECRET, $secret)) {
         http_response_code(403);
         echo json_encode(['ok' => false, 'error' => 'Forbidden. Invalid cron secret token.']);

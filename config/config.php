@@ -94,7 +94,7 @@ if (empty($rawGroqKey) && str_starts_with($rawOpenAIKey, 'gsk_')) {
 define('OPENAI_API_KEY', $rawOpenAIKey);
 define('OPENAI_MODEL', env('OPENAI_MODEL', 'gpt-4o-mini'));
 define('GROQ_API_KEY', $rawGroqKey);
-define('GROQ_MODEL', env('GROQ_MODEL', 'llama-3.3-70b-versatile'));
+define('GROQ_MODEL', env('GROQ_MODEL', 'openai/gpt-oss-120b'));
 define('GEMINI_API_KEY', env('GEMINI_API_KEY', ''));
 define('GEMINI_MODEL', env('GEMINI_MODEL', 'gemini-1.5-flash'));
 define('OPENROUTER_API_KEY', env('OPENROUTER_API_KEY', ''));

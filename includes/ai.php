@@ -137,7 +137,7 @@ class AIService {
 
         if ($providerName === 'groq') {
             $endpoint = 'https://api.groq.com/openai/v1/chat/completions';
-            $model = GROQ_MODEL ?: 'llama-3.3-70b-versatile';
+            $model = GROQ_MODEL ?: 'openai/gpt-oss-120b';
         } elseif ($providerName === 'gemini') {
             $endpoint = 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions';
             $model = GEMINI_MODEL ?: 'gemini-1.5-flash';
@@ -178,6 +178,26 @@ class AIService {
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curlError = curl_error($ch);
         curl_close($ch);
+
+        if ($httpCode !== 200 && $providerName === 'groq' && $model !== 'openai/gpt-oss-20b') {
+            $payload['model'] = 'openai/gpt-oss-20b';
+            $ch = curl_init($endpoint);
+            curl_setopt_array($ch, [
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => json_encode($payload),
+                CURLOPT_HTTPHEADER => $headers,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 45,
+                CURLOPT_SSL_VERIFYPEER => true,
+            ]);
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($ch);
+            curl_close($ch);
+            if ($httpCode === 200) {
+                $model = 'openai/gpt-oss-20b';
+            }
+        }
 
         if ($curlError) {
             throw new Exception("cURL Error ({$providerName}): " . $curlError);

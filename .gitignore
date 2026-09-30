@@ -17,6 +17,9 @@ vendor/
 !.env.example
 
 # Uploaded media (preserve folder structure & security rules)
+uploads/*
+!uploads/.gitkeep
+!uploads/.htaccess
 public_html/uploads/*
 !public_html/uploads/.gitkeep
 !public_html/uploads/.htaccess

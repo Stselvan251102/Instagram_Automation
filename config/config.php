@@ -50,10 +50,11 @@ function load_env($filePath) {
     }
 }
 
-// Check root directory and config directory for .env
+// Check root directory, parent directory and config directory for .env
 $rootPath = dirname(__DIR__);
 load_env($rootPath . '/.env');
 load_env(__DIR__ . '/.env');
+load_env(dirname($rootPath) . '/.env');
 
 /**
  * Helper to retrieve environment variable with fallback
@@ -72,14 +73,15 @@ function env($key, $default = null) {
 
 // App Settings
 define('APP_ENV', env('APP_ENV', 'production'));
-define('APP_URL', rtrim(env('APP_URL', (isset($_SERVER['HTTP_HOST']) ? ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']) : 'http://localhost')), '/'));
+define('APP_URL', rtrim(env('APP_URL', (isset($_SERVER['HTTP_HOST']) ? ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']) : 'https://palevioletred-oyster-552445.hostingersite.com')), '/'));
 define('APP_SECRET', env('APP_SECRET', 'carouselfy_default_secret_key_change_me'));
 
-// Database Credentials
+// Database Credentials (Hostinger Production Defaults)
+define('DB_CONNECTION', env('DB_CONNECTION', 'mysql'));
 define('DB_HOST', env('DB_HOST', 'localhost'));
 define('DB_PORT', env('DB_PORT', '3306'));
-define('DB_NAME', env('DB_NAME', ''));
-define('DB_USER', env('DB_USER', ''));
+define('DB_NAME', env('DB_DATABASE', env('DB_NAME', 'u561630513_Insta_auto')));
+define('DB_USER', env('DB_USERNAME', env('DB_USER', 'u561630513_insta_auto')));
 define('DB_PASSWORD', env('DB_PASSWORD', ''));
 
 // AI API Keys (Stored server-side only)
@@ -96,10 +98,10 @@ define('INSTAGRAM_GRAPH_VERSION', env('INSTAGRAM_GRAPH_VERSION', 'v20.0'));
 // Cron Secret Token
 define('CRON_SECRET', env('CRON_SECRET', 'change_this_cron_token_for_security'));
 
-// Directory Paths
+// Directory Paths (Resolves whether running from repository root or public_html subdirectory)
 define('ROOT_PATH', $rootPath);
-define('PUBLIC_PATH', $rootPath . '/public_html');
-define('UPLOADS_PATH', $rootPath . '/public_html/uploads');
+define('PUBLIC_PATH', is_dir($rootPath . '/public_html') ? $rootPath . '/public_html' : $rootPath);
+define('UPLOADS_PATH', is_dir($rootPath . '/uploads') ? $rootPath . '/uploads' : $rootPath . '/public_html/uploads');
 
 // Error reporting settings
 if (APP_ENV === 'development') {

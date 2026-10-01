@@ -31,7 +31,7 @@ class AIService {
         $customKey = !empty($clientApiKey) ? trim($clientApiKey) : null;
         $customProvider = !empty($clientApiProvider) ? strtolower(trim($clientApiProvider)) : null;
 
-        $serverKey = OPENAI_API_KEY ?: (GROQ_API_KEY ?: (GEMINI_API_KEY ?: (OPENROUTER_API_KEY ?: LOVABLE_API_KEY)));
+        $serverKey = OPENAI_API_KEY ?: (GROQ_API_KEY ?: (GEMINI_API_KEY ?: OPENROUTER_API_KEY));
         $hasKey = !empty($customKey) || !empty($serverKey);
 
         $lastError = null;
@@ -102,9 +102,6 @@ class AIService {
             } elseif (!empty(OPENROUTER_API_KEY)) {
                 $apiKey = OPENROUTER_API_KEY;
                 $providerName = 'openrouter';
-            } elseif (!empty(LOVABLE_API_KEY)) {
-                $apiKey = LOVABLE_API_KEY;
-                $providerName = 'lovable';
             } else {
                 throw new Exception("No AI API key configured.");
             }
@@ -131,7 +128,7 @@ class AIService {
             return self::callAnthropic($apiKey, $systemPrompt, $userPrompt, $topic, $count);
         }
 
-        // OpenAI-compatible Chat Completions (OpenAI, Groq, Gemini, OpenRouter, Lovable)
+        // OpenAI-compatible Chat Completions (OpenAI, Groq, Gemini, OpenRouter)
         $endpoint = 'https://api.openai.com/v1/chat/completions';
         $model = OPENAI_MODEL ?: 'gpt-4o-mini';
 
@@ -144,9 +141,6 @@ class AIService {
         } elseif ($providerName === 'openrouter') {
             $endpoint = 'https://openrouter.ai/api/v1/chat/completions';
             $model = OPENROUTER_MODEL ?: 'openai/gpt-4o-mini';
-        } elseif ($providerName === 'lovable') {
-            $endpoint = 'https://ai.gateway.lovable.dev/v1/chat/completions';
-            $model = 'openai/gpt-4o-mini';
         }
 
         $payload = [

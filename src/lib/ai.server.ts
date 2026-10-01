@@ -95,26 +95,17 @@ export function normalizeSlides(raw: unknown[]): SlideData[] {
 }
 
 export async function generateWithAI(topic: string, count: number, tone: string) {
-  const apiKey = process.env["LOVABLE_API_KEY"];
+  const apiKey = process.env["GROQ_API_KEY"] || process.env["OPENAI_API_KEY"];
   if (!apiKey) throw new Error("AI is not configured.");
+  const isGroq = apiKey.startsWith("gsk_");
   const provider = createOpenAI({
-    baseURL: "https://ai.gateway.lovable.dev/v1",
+    baseURL: isGroq ? "https://api.groq.com/openai/v1" : "https://api.openai.com/v1",
     apiKey,
-    headers: { "Lovable-API-Key": apiKey, "X-Lovable-AIG-SDK": "vercel-ai-sdk" },
   });
   const result = streamText({
-    model: provider.responses("openai/gpt-6-astra"),
+    model: provider.chat(isGroq ? "openai/gpt-oss-120b" : "gpt-4o-mini"),
     system: SYSTEM,
     prompt: `Topic: ${topic}\nTone: ${tone}\nExactly ${count} slides.`,
-    providerOptions: {
-      openai: {
-        forceReasoning: true,
-        reasoningEffort: "low",
-        reasoningSummary: "auto",
-        store: false,
-        include: ["reasoning.encrypted_content"],
-      },
-    },
   });
   const text = await result.text;
   const match = text.match(/\{[\s\S]*\}/);

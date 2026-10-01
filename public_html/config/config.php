@@ -99,7 +99,6 @@ define('GEMINI_API_KEY', env('GEMINI_API_KEY', ''));
 define('GEMINI_MODEL', env('GEMINI_MODEL', 'gemini-1.5-flash'));
 define('OPENROUTER_API_KEY', env('OPENROUTER_API_KEY', ''));
 define('OPENROUTER_MODEL', env('OPENROUTER_MODEL', 'openai/gpt-4o-mini'));
-define('LOVABLE_API_KEY', env('LOVABLE_API_KEY', ''));
 
 // Meta / Instagram Graph API Settings
 define('INSTAGRAM_APP_ID', env('INSTAGRAM_APP_ID', ''));

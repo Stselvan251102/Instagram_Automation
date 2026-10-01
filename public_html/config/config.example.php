@@ -19,9 +19,12 @@ return [
         'password' => 'YOUR_DB_PASSWORD',
     ],
     'ai' => [
-        'openai_api_key' => 'YOUR_OPENAI_API_KEY',
+        'groq_api_key' => 'gsk_YOUR_GROQ_API_KEY',
+        'groq_model' => 'openai/gpt-oss-120b',
+        'openai_api_key' => 'sk-proj-YOUR_OPENAI_API_KEY',
         'openai_model' => 'gpt-4o-mini',
-        'lovable_api_key' => '',
+        'gemini_api_key' => 'AIzaSy_YOUR_GEMINI_API_KEY',
+        'openrouter_api_key' => '',
     ],
     'instagram' => [
         'app_id' => 'YOUR_META_APP_ID',

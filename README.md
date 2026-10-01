@@ -1,203 +1,283 @@
-# Carouselfy — AI Instagram Carousel Automation & Studio
+# Carouselfy — AI Instagram Carousel Automation & Design Studio
 
-A production-ready Instagram Carousel Automation and Canva-style Design Studio converted from Lovable AI to run natively on **Hostinger shared hosting (Apache + PHP + MySQL + HTML/CSS/JavaScript)** without requiring Node.js at runtime.
+A production-ready Instagram Carousel Automation and Canva-style Design Studio built to run natively on **Hostinger Shared Hosting (Apache + PHP 8.3 + MySQL + HTML/CSS/JavaScript)** without requiring Node.js at runtime.
 
 ---
 
-## 🚀 Overview
+## 🌟 Key Features
 
-**Carouselfy** allows content creators, engineers, and marketers to:
-- **Design Scroll-Stopping Carousels:** High-resolution multi-slide editor supporting **4:5 Portrait (1080×1350)**, **1:1 Square (1080×1080)**, and **9:16 Stories (1080×1920)**.
-- **AI Content Engine:** Automatically generate 3–10 slide carousels for technical topics (Python, Salesforce, System Design, etc.) using OpenAI GPT-4o or a built-in offline technical content bank.
-- **Canva-Style Visual Editing:** Drag-and-drop bounding boxes, resize handles, typography controls, and inline double-click text editing.
-- **Pre-Flight Linter:** Automated quality checks for safe-zone compliance (Instagram header, action buttons, swipe indicators), WCAG 4.5:1 contrast, and text overflow with 1-click auto-fix.
-- **Brand Kits:** Manage multiple brand presets, Instagram handles (`@handle`), profile URLs, logos, and custom color palettes.
-- **Direct Instagram Publishing:** One-click publishing of multi-slide carousels and single images directly to Instagram Business & Creator accounts via the official Meta Graph API.
-- **Post Scheduling & Automation:** Schedule carousels for automatic publishing at peak engagement times, powered by Hostinger cPanel Cron Jobs.
-- **Multi-Format Retina Export:** Export carousels as retina 2× ZIP (PNGs), multi-page PDF, or single PNG/JPG slides.
+- **Canva-Style Visual Editor:**
+  - Multi-slide interactive canvas supporting **4:5 Portrait (1080×1350)**, **1:1 Square (1080×1080)**, and **9:16 Stories (1080×1920)**.
+  - Drag-and-drop bounding boxes, corner resize handles, rotation, element reordering, opacity, and inline double-click text editing.
+- **Multi-Provider AI Content Generation:**
+  - Powered by **Groq (`openai/gpt-oss-120b`)** for sub-second generation, with support for **OpenAI (`gpt-4o-mini`)**, **Google Gemini (`gemini-1.5-flash`)**, **Anthropic Claude**, and **OpenRouter**.
+  - Intelligent topic-adaptive content engine covering **Wellness/Health**, **Marketing/Growth**, **Finance/Wealth**, **Productivity**, and **Tech/Coding** with zero hardcoded placeholders.
+  - **"Bring Your Own API Key"** UI modal with browser `localStorage` persistence.
+- **Pre-Flight Design Linter:**
+  - Automated quality auditor verifying Instagram safe margins (top account header, bottom action bar, swipe indicator bounds), WCAG 4.5:1 color contrast, and text overflow with a 1-click **Auto-Fix** tool.
+- **Brand Kits System:**
+  - Manage multiple brand presets with handles (`@yourbrand`), profile links, logo libraries, custom hex palettes, and typography presets.
+- **Direct Instagram Publishing via Meta Graph API:**
+  - Official Meta Graph API v20 integration supporting 2-step carousel container uploads (`carousel_item`), single image publishing, captions, and hashtag injection.
+- **Automated Post Scheduler & Cron Runner:**
+  - Schedule carousels for automatic publishing at peak audience engagement times, executed by Hostinger background Cron jobs.
+- **Retina 2× Multi-Format Exporter:**
+  - Export carousels as retina 2× ZIP (high-res PNGs), multi-page PDF documents, or single PNG/JPG slide images.
 
 ---
 
 ## 🛠 Technology Stack
 
-- **Backend Runtime:** PHP 8.1 / 8.2 / 8.3 (Native Hostinger shared hosting support)
-- **Database:** MySQL 5.7+ / 8.0+ or MariaDB 10.3+ via PHP Data Objects (PDO) with prepared statements
-- **Web Server:** Apache 2.4+ with `mod_rewrite`, `.htaccess`, security headers, and upload hardening
-- **Frontend Engine:** Production React & Tailwind CSS vector canvas bundled into static assets in `public_html/assets/`
-- **APIs & Integrations:**
-  - **Meta / Instagram Graph API:** Official Instagram Business Publishing API
-  - **OpenAI API:** GPT-4o / GPT-4o-mini Chat Completion with structured JSON output and built-in offline fallback
+| Layer | Technologies |
+| :--- | :--- |
+| **Backend** | Pure **PHP 8.3 / 8.2 / 8.1** (Zero Node.js dependency at runtime on shared hosting) |
+| **Database** | **MySQL 5.7+ / 8.0+ / MariaDB 10.3+** via PHP PDO with prepared statements |
+| **Web Server** | **Apache 2.4+** with `mod_rewrite`, `.htaccess`, HTTP security headers, and script execution prevention |
+| **Frontend Studio** | Compiled React 19 & Tailwind CSS vector canvas bundled into static vanilla assets (`assets/js/studio.js`) |
+| **AI Providers** | **Groq Cloud API** (`api.groq.com`), **OpenAI API** (`api.openai.com`), **Google Gemini API**, **Anthropic** |
+| **Social API** | **Meta / Instagram Graph API** (Business & Creator Accounts) |
 
 ---
 
-## 📁 Project Structure
+## 📁 Repository Directory Structure
 
 ```
-├── public_html/                      # Hostinger public webroot
-│   ├── .htaccess                     # Apache clean routing, security headers & script blocking
-│   ├── index.php                     # Main Carousel Studio entry point
-│   ├── dashboard.php                 # Project & post statistics dashboard
-│   ├── schedule.php                  # Post scheduling manager & queue
-│   ├── accounts.php                  # Connected Instagram accounts manager
-│   ├── settings.php                  # System diagnostics & API credential status
+├── public_html/                      # Hostinger public webroot (mirrored at root for portability)
+│   ├── .htaccess                     # Apache clean routing, GZIP compression, security headers
+│   ├── index.php                     # Main Carousel Studio editor entry point
+│   ├── dashboard.php                 # Project management, post analytics & overview
+│   ├── schedule.php                  # Scheduled posts queue & calendar
+│   ├── accounts.php                  # Connected Instagram accounts & token health
+│   ├── settings.php                  # System diagnostics & direct AI credentials configuration
 │   ├── login.php                     # User authentication login
 │   ├── register.php                  # User registration
 │   ├── logout.php                    # Session termination
 │   ├── assets/
-│   │   ├── css/studio.css            # Production CSS & Tailwind styles
-│   │   └── js/studio.js              # Production React Canvas bundle
+│   │   ├── css/studio.css            # Compiled production CSS & typography styles
+│   │   └── js/studio.js              # Compiled production studio application bundle
 │   ├── api/
-│   │   ├── ai/generate.php           # AI carousel generation endpoint
-│   │   ├── projects/                 # Save, list, get, delete project endpoints
-│   │   ├── brandkits/                # Save and list brand kit endpoints
+│   │   ├── ai/generate.php           # AI carousel generation endpoint (Groq/OpenAI/Gemini)
+│   │   ├── projects/                 # Save, list, get, and delete project endpoints
+│   │   ├── brandkits/                # Manage saved brand presets
 │   │   ├── instagram/                # OAuth connect, callback, publish & schedule endpoints
-│   │   ├── auth/                     # Login, register, status, logout endpoints
-│   │   └── upload.php                # Secure slide & image upload handler
+│   │   ├── auth/                     # Session status, login, register, logout
+│   │   ├── db_status.php             # Diagnostic endpoint reporting database connectivity & schema
+│   │   ├── db_setup.php              # Safe non-destructive CREATE TABLE IF NOT EXISTS executor
+│   │   └── upload.php                # Image and logo upload handler
 │   ├── cron/
-│   │   └── publish_scheduled.php     # Cron runner for automated publishing
-│   └── uploads/                      # Uploaded assets & slide buffers
-│       ├── .htaccess                 # Disables PHP script execution in uploads
+│   │   └── publish_scheduled.php     # Background post execution runner (protected by CRON_SECRET)
+│   └── uploads/                      # User uploaded images & generated carousel slides
+│       ├── .htaccess                 # Hardened against script execution (PHP disabled)
 │       └── .gitkeep
 ├── config/
-│   ├── config.php                    # Application configuration & .env parser
-│   ├── config.example.php            # Example PHP configuration
-│   └── database.php                  # PDO database connection singleton
+│   ├── config.php                    # Application configuration, provider auto-detection & .env parser
+│   ├── config.example.php            # PHP configuration array template
+│   └── database.php                  # Thread-safe PDO MySQL connection singleton
 ├── includes/
-│   ├── header.php                    # Reusable dark studio navigation header
-│   ├── footer.php                    # Reusable footer
-│   ├── functions.php                 # Helper functions, CSRF, sanitization & session
-│   ├── auth.php                      # Authentication service
-│   ├── ai.php                        # OpenAI API client & fallback content bank
-│   └── instagram.php                 # Meta / Instagram Graph API client
-├── database.sql                      # MySQL database schema & seed data
-├── .env.example                      # Environment variables template
-├── .gitignore                        # Git exclusions (.env, node_modules, uploads)
+│   ├── header.php                    # Navigation header with dark theme UI
+│   ├── footer.php                    # Studio footer
+│   ├── functions.php                 # CSRF protection, input sanitization, JSON helpers
+│   ├── auth.php                      # Authentication and password hashing service
+│   ├── ai.php                        # Multi-provider LLM dispatcher & topic fallback engine
+│   └── instagram.php                 # Meta Graph API client (OAuth, media containers, publishing)
+├── src/                              # TypeScript / React source files for the Studio Canvas
+│   ├── components/studio/            # CanvasStage, LeftPanel, RightPanel, ElementToolbar, Filmstrip
+│   ├── lib/                          # Archetypes, layout engine, exporter, generator, templates
+│   └── store/studio.ts               # Zustand studio state manager with localStorage persistence
+├── database.sql                      # Complete MySQL database schema (7 production tables)
+├── .env.example                      # Production environment template
+├── .gitignore                        # Git exclusions (.env, node_modules, sensitive credentials)
+├── package.json                      # Build toolchain & dependencies for client asset compilation
+├── vite.config.client.ts             # Vite configuration compiling React studio into static assets
 └── README.md                         # Documentation
 ```
 
 ---
 
-## 💻 Local Setup & Testing
+## ⚡ Hostinger Shared Hosting Deployment Guide
 
-### 1. Requirements
-- PHP 8.1+ with `curl`, `pdo_mysql`, `openssl`, `mbstring`, and `gd` extensions enabled.
-- (Optional) Node.js 18+ and npm only if you want to rebuild the frontend assets.
+### 1. Connect GitHub Repository via Hostinger Git
+1. Log in to **Hostinger hPanel** → navigate to **Websites** → click **Manage** for your domain.
+2. In the sidebar under **Advanced**, select **Git**.
+3. Link your repository:
+   - **Repository:** `https://github.com/Stselvan251102/Instagram_Automation.git`
+   - **Branch:** `main`
+   - **Install directory:** Leave empty (`""`) to deploy into the default document root.
+4. Enable **Auto-Deployment** so every `git push origin main` deploys automatically to Hostinger.
 
-### 2. Configure Environment
-Copy `.env.example` to `.env`:
+### 2. Configure Environment (`.env`)
+In Hostinger **File Manager**, create a file named `.env` in the document root (`public_html/` or domain root):
+
+```env
+# Application Environment
+APP_ENV=production
+APP_URL=https://your-domain.hostingersite.com
+APP_SECRET=a_random_32_character_secret_string
+
+# Hostinger MySQL Database
+DB_CONNECTION=mysql
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=u561630513_Insta_auto
+DB_USERNAME=u561630513_insta_auto
+DB_PASSWORD=YOUR_ACTUAL_DATABASE_PASSWORD
+
+# Groq AI Configuration (Recommended — ultra-fast & free tier available)
+GROQ_API_KEY=gsk_your_groq_api_key_here
+GROQ_MODEL=openai/gpt-oss-120b
+
+# OpenAI Configuration (Optional fallback)
+OPENAI_API_KEY=sk-proj-your_openai_key_here
+OPENAI_MODEL=gpt-4o-mini
+
+# Google Gemini Configuration (Optional fallback)
+GEMINI_API_KEY=AIzaSy_your_gemini_key_here
+GEMINI_MODEL=gemini-1.5-flash
+
+# Meta / Instagram Graph API Configuration
+INSTAGRAM_APP_ID=YOUR_FACEBOOK_APP_ID
+INSTAGRAM_APP_SECRET=YOUR_FACEBOOK_APP_SECRET
+INSTAGRAM_REDIRECT_URI=https://your-domain.hostingersite.com/api/instagram/callback.php
+INSTAGRAM_GRAPH_VERSION=v20.0
+
+# Cron Security Secret Token
+CRON_SECRET=YOUR_SECURE_CRON_TOKEN
+```
+
+### 3. Initialize Database Tables Safely
+The application includes a safe, non-destructive database initializer that uses `CREATE TABLE IF NOT EXISTS`:
+
+Visit the following URL in your browser or run via `curl`:
 ```bash
-cp .env.example .env
-```
-Edit `.env` to provide your MySQL database credentials (if available locally) and OpenAI/Meta API keys.
-
-### 3. Run with Built-in PHP Server
-Start the application locally without needing Apache:
-```bash
-php -S 127.0.0.1:8088 -t public_html
-```
-Open your browser and navigate to:
-```
-http://127.0.0.1:8088/
+curl "https://your-domain.hostingersite.com/api/db_setup.php?token=YOUR_SECURE_CRON_TOKEN"
 ```
 
-### 4. Rebuilding Frontend (Developers Only)
-If you modify React components in `src/`, rebuild the production bundle:
+Verify that all 7 tables are present:
 ```bash
-npm install
-npm run build:client
+curl "https://your-domain.hostingersite.com/api/db_status.php?token=YOUR_SECURE_CRON_TOKEN"
 ```
-The output will compile directly into `public_html/assets/js/studio.js` and `public_html/assets/css/studio.css`.
+Response will return: `"ready_for_production": true`.
+
+### 4. Setup Hostinger Cron Job for Auto-Publishing
+To automatically publish scheduled carousels at their target time:
+1. In hPanel, go to **Advanced → Cron Jobs**.
+2. Select **Custom** interval: Every 5 minutes (`*/5 * * * *`).
+3. Add the command:
+   ```bash
+   curl -s "https://your-domain.hostingersite.com/cron/publish_scheduled.php?token=YOUR_SECURE_CRON_TOKEN" >/dev/null 2>&1
+   ```
 
 ---
 
-## 🌐 Hostinger Shared Hosting Deployment
+## 🤖 AI Provider Architecture
 
-### Step 1: Connect Repository or Upload Files
-1. Log in to your **Hostinger Control Panel (hPanel)**.
-2. Under **Advanced**, click **GIT**.
-3. Create a new repository:
-   - **Repository URL:** `https://github.com/Stselvan251102/Instagram_Automation.git`
-   - **Branch:** `main`
-   - **Install Path:** `public_html` (or your domain root)
-4. Click **Create** to deploy.
+Carouselfy features a resilient multi-provider dispatch system:
 
-### Step 2: Configure PHP Version
-1. In hPanel, navigate to **Advanced → PHP Configuration**.
-2. Select **PHP 8.2** or **PHP 8.3**.
-3. Under the **PHP Extensions** tab, ensure the following are enabled:
-   - `pdo_mysql`
-   - `curl`
-   - `gd`
-   - `openssl`
-   - `mbstring`
-
-### Step 3: Create MySQL Database & Import Schema
-1. In hPanel, navigate to **Databases → Management**.
-2. Create a new MySQL database (note the database name, username, and password).
-3. Click **Enter phpMyAdmin** next to the newly created database.
-4. Click the **Import** tab and choose `database.sql` from the repository root.
-5. Click **Go** to create the tables (`users`, `projects`, `brand_kits`, `instagram_accounts`, `scheduled_posts`, `activity_logs`, `settings`).
-
-### Step 4: Configure Environment Variables (.env)
-1. Using the Hostinger **File Manager**, create a file named `.env` in the root directory (one level above or directly in `public_html`).
-2. Populate `.env` using `.env.example`:
-```ini
-APP_ENV=production
-APP_URL=https://yourdomain.com
-APP_SECRET=your_32_character_random_secret
-
-DB_HOST=localhost
-DB_PORT=3306
-DB_NAME=u123456789_carouselfy
-DB_USER=u123456789_user
-DB_PASSWORD=your_database_password
-
-OPENAI_API_KEY=sk-proj-your_openai_key
-OPENAI_MODEL=gpt-4o-mini
-
-INSTAGRAM_APP_ID=your_meta_app_id
-INSTAGRAM_APP_SECRET=your_meta_app_secret
-INSTAGRAM_REDIRECT_URI=https://yourdomain.com/api/instagram/callback.php
-INSTAGRAM_GRAPH_VERSION=v20.0
-
-CRON_SECRET=your_custom_cron_secret_token
+```mermaid
+flowchart TD
+    A[User Request: Topic, Slide Count, Tone] --> B{Client Provided API Key?}
+    B -->|Yes| C[Route by Key Prefix: gsk_, AIzaSy, sk-ant-, sk-proj-]
+    B -->|No| D{Server .env Key Available?}
+    D -->|Groq Key| E[Groq API: openai/gpt-oss-120b]
+    D -->|Gemini Key| F[Google Gemini: gemini-1.5-flash]
+    D -->|OpenAI Key| G[OpenAI: gpt-4o-mini]
+    D -->|None Configured| H[Intelligent Topic-Adaptive Fallback Engine]
+    E -->|Error 404/Rate Limit| I[Auto-Retry: openai/gpt-oss-20b]
+    I -->|Success| J[Structured Carousel Slide JSON]
+    E -->|Success| J
+    F -->|Success| J
+    G -->|Success| J
+    H --> J
+    J --> K[Render on Canvas Stage & Filmstrip]
 ```
 
-### Step 5: Enable SSL & Verify Domain
-1. In hPanel, go to **Security → SSL** and install a free Let's Encrypt SSL certificate.
-2. In **Website → Force HTTPS**, turn on HTTPS redirection.
-3. Test your domain: `https://yourdomain.com/settings.php` to verify all checks pass.
+### Groq Key Auto-Detection
+Any API key starting with `gsk_` is automatically routed to Groq (`https://api.groq.com/openai/v1/chat/completions`) using model `openai/gpt-oss-120b`. If access to that model is unavailable, it automatically retries with `openai/gpt-oss-20b`.
 
-### Step 6: Configure Automated Background Publishing (Cron Job)
-1. In hPanel, go to **Advanced → Cron Jobs**.
-2. Select **Custom** type.
-3. Schedule to run every minute:
-   - **Minute:** `*`
-   - **Hour:** `*`
-   - **Day:** `*`
-   - **Month:** `*`
-   - **Weekday:** `*`
-4. Enter the command (replace with your Hostinger username):
+### Managing AI Keys in Settings
+Users can configure and test their AI credentials without editing files by opening `/settings.php` and entering their API keys in the **AI Generative Engine Setup** panel.
+
+---
+
+## 📸 Meta / Instagram Graph API Configuration
+
+To publish carousels directly to Instagram:
+
+1. **Meta Developer Portal:**
+   - Create an app at [developers.facebook.com](https://developers.facebook.com/) with type **Business**.
+   - Add the **Instagram Graph API** and **Facebook Login for Business** products.
+2. **Permissions Required:**
+   - `instagram_basic`
+   - `instagram_content_publish`
+   - `pages_show_list`
+   - `pages_read_engagement`
+3. **Redirect URI:**
+   - In Facebook Login settings, add:
+     `https://your-domain.hostingersite.com/api/instagram/callback.php`
+4. **Publishing Pipeline:**
+   - Uploads each slide image to `uploads/` with a public HTTPS URL.
+   - Creates child media containers using `POST /{ig-user-id}/media?image_url=...&is_carousel_item=true`.
+   - Creates the parent container using `POST /{ig-user-id}/media?media_type=CAROUSEL&children=...&caption=...`.
+   - Publishes the post using `POST /{ig-user-id}/media_publish?creation_id={parent-container-id}`.
+
+---
+
+## 💻 Local Development & Build Workflow
+
+### 1. Requirements
+- PHP 8.1+ with `curl`, `pdo_mysql`, `openssl`, `mbstring`, and `gd`.
+- Node.js 18+ (only needed if editing TypeScript/React studio components in `src/`).
+
+### 2. Local PHP Server
+Run locally without Apache:
 ```bash
-php /home/u123456789/domains/yourdomain.com/public_html/cron/publish_scheduled.php > /dev/null 2>&1
+php -S 127.0.0.1:8000 -t public_html
 ```
+
+### 3. Rebuilding the Studio Frontend
+If you modify any files in `src/components/`, `src/lib/`, or `src/store/`:
+```bash
+# Install dependencies
+npm install
+
+# Build the client bundle directly into public_html/assets/
+npm run build:client
+
+# Mirror assets to root
+powershell -Command "Copy-Item -Path 'public_html/assets/*' -Destination 'assets' -Recurse -Force"
+```
+
+---
+
+## 📡 REST API Reference
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/api/ai/generate.php` | Generate structured carousel slides (`topic`, `count`, `tone`, optional `apiKey`) |
+| `POST` | `/api/projects/save.php` | Save or update a carousel project JSON |
+| `GET` | `/api/projects/list.php` | List saved projects with thumbnails and dates |
+| `GET` | `/api/projects/get.php?id={id}` | Retrieve a project by ID |
+| `POST` | `/api/projects/delete.php` | Delete a saved project |
+| `GET` | `/api/brandkits/list.php` | Retrieve saved brand kit presets |
+| `POST` | `/api/upload.php` | Upload an image, slide export, or brand logo |
+| `POST` | `/api/instagram/publish.php` | Publish a carousel immediately to Instagram |
+| `POST` | `/api/instagram/schedule.php` | Add a carousel to the publishing queue |
+| `GET` | `/api/db_status.php?token={token}` | Check database connection and schema health |
+| `GET` | `/api/db_setup.php?token={token}` | Safe non-destructive database table initializer |
+| `GET` | `/cron/publish_scheduled.php?token={token}` | Scheduled post automation runner |
 
 ---
 
 ## 🔒 Security Best Practices
 
-1. **No Sensitive Keys in Version Control:** Never commit `.env` or real API credentials to Git. `.gitignore` is pre-configured to strictly ignore `.env`, `.env.*`, and temporary uploads.
-2. **Prepared Statements Everywhere:** All database interactions use PDO prepared statements to completely eliminate SQL injection vulnerabilities.
-3. **Upload Directory Hardening:** The `public_html/uploads/` directory includes an `.htaccess` file preventing execution of any `.php`, `.phtml`, or executable scripts.
-4. **MIME & File Validation:** Uploads strictly validate file magic bytes (MIME types) and extensions (`png`, `jpeg`, `webp`), limiting files to 15MB.
-5. **CSRF Protection:** State-changing requests validate a session-bound CSRF token.
-6. **Cron Webhook Token:** Direct HTTP access to the cron runner is protected by `?secret=CRON_SECRET`.
+- **Upload Folder Protection:** `public_html/uploads/.htaccess` disables PHP script execution, preventing malicious file uploads.
+- **CSRF Tokens:** All user actions (login, register, brand kits, projects) enforce CSRF verification.
+- **SQL Injection Prevention:** 100% of database queries use PDO prepared statements with parameterized bounds.
+- **Token Masking:** Sensitive API keys are never echoed back to client-side scripts in plain text.
+- **Cron Protection:** Background publishing scripts require the secret `CRON_SECRET` query token.
 
 ---
 
-## 📦 GitHub Deployment
+## 📄 License
 
-- **Repository:** `https://github.com/Stselvan251102/Instagram_Automation.git`
-- **Branch:** `main`
-
-To deploy updates, commit and push to `main`. Hostinger's Git deployment feature will automatically sync the changes.
+This project is licensed under the MIT License.

@@ -66,7 +66,6 @@ $cssPath = '/assets/css/studio.css';
         <a href="/dashboard.php" class="px-2.5 py-1 rounded text-zinc-400 hover:text-white hover:bg-zinc-800/60 transition-colors">Dashboard</a>
         <a href="/schedule.php" class="px-2.5 py-1 rounded text-zinc-400 hover:text-white hover:bg-zinc-800/60 transition-colors">Schedule</a>
         <a href="/accounts.php" class="px-2.5 py-1 rounded text-zinc-400 hover:text-white hover:bg-zinc-800/60 transition-colors">Instagram</a>
-        <a href="/settings.php" class="px-2.5 py-1 rounded text-zinc-400 hover:text-white hover:bg-zinc-800/60 transition-colors">Settings</a>
       </div>
     </div>
 

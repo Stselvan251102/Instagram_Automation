@@ -7,7 +7,6 @@
         <a href="/dashboard.php" class="hover:text-foreground">Dashboard</a>
         <a href="/schedule.php" class="hover:text-foreground">Scheduling</a>
         <a href="/accounts.php" class="hover:text-foreground">Instagram API</a>
-        <a href="/settings.php" class="hover:text-foreground">System Health</a>
       </div>
     </div>
   </footer>
